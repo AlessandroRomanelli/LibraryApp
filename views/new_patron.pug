@@ -4,6 +4,22 @@ html(lang='en')
   include ./templates/nav-header
   body
     h1 New Patron
+    if errors
+      h4(style='color:red')="The following points were missing or invalid:"
+      ul
+        each error in errors.errors
+          if error.path == "first_name"
+            li(style='color:red') - First name
+          if error.path == "last_name"
+            li(style='color:red') - Last name
+          if error.path == "address"
+            li(style='color:red') - Address
+          if error.path == "email"
+            li(style='color:red') - E-Mail
+          if error.path == "library_id"
+            li(style='color:red') - Library ID
+          if error.path == "zip_code"
+            li(style='color:red') - ZIP Code
     form(action="/patrons/create" method="POST")
       p
         label(for='first_name') First Name

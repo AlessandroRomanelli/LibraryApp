@@ -17,11 +17,17 @@ module.exports = function(sequelize, DataTypes) {
     loaned_on: {
       type: DataTypes.DATEONLY,
       allowNull: false,
-      defaultValue: sequelize.NOW
+      defaultValue: sequelize.NOW,
+      validate: {
+        isDate: true
+      }
     },
     return_by: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isDate: true
+      }
     },
     returned_on: DataTypes.DATEONLY
   },

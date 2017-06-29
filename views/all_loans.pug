@@ -6,6 +6,13 @@ html(lang='en')
     h1=title
     p
       a.button(href='/loans/create') Create New Loan
+    p.filters
+      | Filters:
+      a(href='/loans') All
+      |
+      a(href='/loans/overdue') Overdue
+      |
+      a(href='/loans/checked-out') Checked Out
     table
       thead
         tr

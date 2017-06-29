@@ -8,27 +8,45 @@ module.exports = function(sequelize, DataTypes) {
     },
     first_name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isAlpha: true
+      }
     },
     last_name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isAlpha: true
+      }
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isAlpha: true
+      }
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isEmail: true
+      }
     },
     library_id: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isAlphanumeric: true
+      }
     },
     zip_code: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isInt: true
+      }
     }
   },
   {

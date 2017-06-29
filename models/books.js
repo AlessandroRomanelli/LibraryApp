@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: true,
       validate: {
-        isAlpha: true
+        isAlphanumeric: true
       }
     },
     author: {
@@ -30,10 +30,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     first_published: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      validate: {
-        isInt: true
-      }
+      allowNull: true
     }
   },  {
     timestamps: false,

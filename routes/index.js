@@ -18,7 +18,8 @@ router.get('/books/overdue', function (req, res, next) {
     where: {
       return_by: {
         lte: new Date()
-      }
+      },
+      returned_on: null
     },
     include: [db.books]
   }).then(function(loans) {
@@ -50,6 +51,14 @@ router.get('/patrons/create', function(req, res, next) {
 router.post('/patrons/create', function(req, res, next) {
   db.patrons.create(req.body).then(function(){
     res.redirect('/patrons');
+  }).catch(function(error) {
+    if(error.name === "SequelizeValidationError") {
+      res.render('new_patron', {errors: error})
+    } else {
+      throw error
+    }
+  }).catch(function(error) {
+    res.status(500).send(error);
   });
 });
 
@@ -60,6 +69,31 @@ router.get('/loans', function (req, res, next) {
     res.render('all_loans', {loans: loans, title: "Loans"});
   });
 });
+
+router.get('/loans/overdue', function (req, res, next) {
+  db.loans.findAll({
+    where: {
+      return_by: {
+        lte: new Date()
+      },
+      returned_on: null
+    },
+    include: [db.books, db.patrons]
+  }).then(function(loans) {
+    res.render('filtered_loans', {loans: loans, title: "Overdue Loans"});
+  });
+})
+
+router.get('/loans/checked-out', function (req, res, next) {
+  db.loans.findAll({
+    where: {
+      returned_on: null
+    },
+    include: [db.books, db.patrons]
+  }).then(function(loans) {
+    res.render('filtered_loans', {loans: loans, title: "Active Loans"});
+  });
+})
 
 router.get('/loans/create', function (req, res, next) {
   var currentTime = new Date();
@@ -162,7 +196,7 @@ router.post('/books/create', function (req, res, next) {
     res.redirect('/books');
   }).catch(function(error) {
     if(error.name === "SequelizeValidationError") {
-      res.render('new_book', {error: error})
+      res.render('new_book', {errors: error})
     } else {
       throw error
     };
