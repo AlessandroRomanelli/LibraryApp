@@ -1,0 +1,9 @@
+doctype
+html(lang='en')
+  include ./templates/head.pug
+  include ./templates/nav-header.pug
+  body
+    h1 Patrons
+    p
+      a.button(href='/patrons/create') Create New Patron
+    include ./templates/patron-details.pug

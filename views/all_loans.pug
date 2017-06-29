@@ -1,0 +1,30 @@
+doctype
+html(lang='en')
+  include ./templates/head.pug
+  include ./templates/nav-header.pug
+  body
+    h1=title
+    p
+      a.button(href='/loans/create') Create New Loan
+    table
+      thead
+        tr
+          th Book
+          th Patron
+          th Loaned on
+          th Return by
+          th Returned on
+          th Action
+      each loan in loans
+        tbody
+          tr
+            td
+              a(href=`/books/edit/${loan.book.id}`)=loan.book.title
+            td
+              a(href=`/patrons/edit/${loan.patron_id}`) #{loan.patron.first_name} #{loan.patron.last_name}
+            td=loan.loaned_on
+            td=loan.return_by
+            td=loan.returned_on
+            td
+              if (!loan.returned_on)
+                a.button(href=`/loans/return/${loan.id}`) Return Book

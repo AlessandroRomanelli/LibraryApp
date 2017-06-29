@@ -1,0 +1,50 @@
+doctype
+html(lang='en')
+  include ./templates/head
+  include ./templates/nav-header
+body
+  h1 Patron: #{patron.first_name} #{patron.last_name}
+  form(action=`/patrons/edit/${patron.id}?_method=PUT` method="POST")
+    p
+      label(for='first_name') First Name
+      input#first_name(type='text', value=`${patron.first_name}` name='first_name')
+    p
+      label(for='last_name') Last Name
+      input#last_name(type='text', value=`${patron.last_name}` name='last_name')
+    p
+      label(for='address')  Address
+      input#address(type='text', value=`${patron.address}` name='address')
+    p
+      label(for='email') Email
+      input#email(type='text', value=`${patron.email}` name='email')
+    p
+      label(for='library_id') Library ID
+      input#library_id(type='text', value=`${patron.first_name}` name='library_id')
+    p
+      label(for='zip_code') Zip Code
+      input#zip_code(type='text', value=`${patron.zip_code}` name='zip_code')
+    p
+      input(type='submit', value='Update')
+  h2 Loan History
+  table
+    thead
+      tr
+        th Book
+        th Patron
+        th Loaned on
+        th Return by
+        th Returned on
+        th Action
+    tbody
+      each loan in patron.loans
+        tr
+          td
+            a(href=`/books/edit/${loan.book.id}`)=loan.book.title
+          td
+            a(href='patron_detail.html') #{patron.first_name} #{patron.last_name}
+          td=loan.loaned_on
+          td=loan.return_by
+          td=loan.returned_on
+          td
+            if (!loan.returned_on)
+              a.button(href=`/loans/return/${loan.id}`) Return Book

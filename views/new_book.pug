@@ -1,0 +1,22 @@
+doctype
+html(lang='en')
+  include ./templates/head.pug
+  include ./templates/nav-header.pug
+  body
+    h1 New Book
+    form(action="/books/create" method="POST")
+      p
+        label(for='title') Title (*)
+        input#title(type='text' name='title')
+      p
+        label(for='author') Author (*)
+        input#author(type='text' name='author')
+      p
+        label(for='genre') Genre (*)
+        input#genre(type='text' name='genre')
+      p
+        label(for='first_published') First Published
+        input#first_published(type='number' name='first_published')
+      p Fields marked with a <strong>(*)</strong> are required.
+      p
+        input(type='submit', value='Create New Book')

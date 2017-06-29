@@ -1,0 +1,16 @@
+doctype
+html(lang='en')
+  include ./templates/head.pug
+  include ./templates/nav-header.pug
+  body
+    h1=title
+    p
+      a.button(href='/books/create') Create New Book
+    p.filters
+      | Filters:
+      a(href='/books') All
+      |
+      a(href='/books/overdue') Overdue
+      |
+      a(href='/books/checked-out') Checked Out
+    include ./templates/book-filter.pug
