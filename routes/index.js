@@ -18,8 +18,7 @@ router.get('/books/overdue', function (req, res, next) {
     where: {
       return_by: {
         lte: new Date()
-      },
-      returned_on: null
+      }
     },
     include: [db.books]
   }).then(function(loans) {
@@ -56,7 +55,7 @@ router.post('/patrons/create', function(req, res, next) {
       res.render('new_patron', {errors: error})
     } else {
       throw error
-    }
+    };
   }).catch(function(error) {
     res.status(500).send(error);
   });
@@ -70,36 +69,15 @@ router.get('/loans', function (req, res, next) {
   });
 });
 
-router.get('/loans/overdue', function (req, res, next) {
-  db.loans.findAll({
-    where: {
-      return_by: {
-        lte: new Date()
-      },
-      returned_on: null
-    },
-    include: [db.books, db.patrons]
-  }).then(function(loans) {
-    res.render('filtered_loans', {loans: loans, title: "Overdue Loans"});
-  });
-})
-
-router.get('/loans/checked-out', function (req, res, next) {
-  db.loans.findAll({
-    where: {
-      returned_on: null
-    },
-    include: [db.books, db.patrons]
-  }).then(function(loans) {
-    res.render('filtered_loans', {loans: loans, title: "Active Loans"});
-  });
-})
-
 router.get('/loans/create', function (req, res, next) {
   var currentTime = new Date();
   var currentDate =  currentTime.getFullYear() + '-'
            + ('0' + (currentTime.getMonth()+1)).slice(-2) + '-'
            + ('0' + (currentTime.getDate())).slice(-2);
+  var returnDate = new Date(currentTime.setTime(currentTime.getTime()+7*86400000));
+  returnDate = returnDate.getFullYear() + '-'
+           + ('0' + (returnDate.getMonth()+1)).slice(-2) + '-'
+           + ('0' + (returnDate.getDate())).slice(-2);
   var data = { books: "", patrons: ""};
   db.books.findAll()
   .then(function(books){
@@ -111,7 +89,7 @@ router.get('/loans/create', function (req, res, next) {
     return data
   })
   .then(function (data) {
-    res.render('new_loan', {data: data, date: currentDate});
+    res.render('new_loan', {data: data, date: currentDate, returnDate: returnDate});
   });
 });
 
@@ -143,6 +121,14 @@ router.put('/patrons/edit/:id', function(req, res, next) {
     return patron.update(req.body);
   }).then(function (patron) {
     res.redirect('/patrons');
+  }).catch(function(error) {
+    if(error.name === "SequelizeValidationError") {
+      res.render('new_patron', {errors: error})
+    } else {
+      throw error
+    };
+  }).catch(function(error) {
+    res.status(500).send(error);
   });
 });
 
@@ -171,19 +157,27 @@ router.put('/books/edit/:id', function (req, res, next) {
     .then(function() {
       res.redirect('/books');
     })
+    .catch(function(error) {
+    if(error.name === "SequelizeValidationError") {
+      res.render('new_book', {errors: error})
+    } else {
+      throw error
+    };
+  }).catch(function(error) {
+    res.status(500).send(error);
+  });
 });
 
 router.get('/loans/return/:id', function (req, res, next) {
   var currentTime = new Date();
-  var currentDate = `${currentTime.getFullYear()}-${currentTime.getMonth()+1}-${currentTime.getDate()}`;
-  db.loans.findById(req.params.id)
-  .then(function(loan) {
-    return loan.update({
-      returned_on: currentDate
-    });
+  var currentDate =  currentTime.getFullYear() + '-'
+           + ('0' + (currentTime.getMonth()+1)).slice(-2) + '-'
+           + ('0' + (currentTime.getDate())).slice(-2);
+  db.loans.findById(req.params.id, {
+    include: [db.books, db.patrons]
   })
-  .then(function(loan) {
-    res.redirect(`/loans`);
+  .then(function (loan) {
+    res.render(`return_book`, {date: currentDate, loan: loan, title: "Patron: Return Book"});
   });
 });
 
@@ -192,15 +186,18 @@ router.get('/books/create', function (req, res, next) {
 });
 
 router.post('/books/create', function (req, res, next) {
-  db.books.create(req.body).then(function() {
+  db.books.create(req.body)
+  .then(function() {
     res.redirect('/books');
-  }).catch(function(error) {
+  })
+  .catch(function(error) {
     if(error.name === "SequelizeValidationError") {
-      res.render('new_book', {errors: error})
+      res.render('new_book', {errors: error});
     } else {
       throw error
     };
-  }).catch(function(error) {
+  })
+  .catch(function(error) {
     res.status(500).send(error);
   });
 });

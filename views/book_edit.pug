@@ -4,6 +4,7 @@ html(lang='en')
   include ./templates/nav-header
   body
     h1=title
+    include ./templates/book-error
     form(action=`/books/edit/${book.id}?_method=PUT`, method="POST")
       p
         label(for='title') Title

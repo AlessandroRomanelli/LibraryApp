@@ -4,16 +4,7 @@ html(lang='en')
   include ./templates/nav-header.pug
   body
     h1 New Book
-    if errors
-      h4(style='color:red')="There was a problem with the following points:"
-      ul
-        each error in errors.errors
-          if error.path == "title"
-            li(style='color:red') - Title
-          if error.path == "author"
-            li(style='color:red') - Author
-          if error.path == "genre"
-            li(style='color:red') - Genre
+    include ./templates/book-error.pug
     form(action="/books/create" method="POST")
       p
         label(for='title') Title (*)

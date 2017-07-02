@@ -4,6 +4,7 @@ html(lang='en')
   include ./templates/nav-header
 body
   h1 Patron: #{patron.first_name} #{patron.last_name}
+  include ./templates/patron-error
   form(action=`/patrons/edit/${patron.id}?_method=PUT` method="POST")
     p
       label(for='first_name') First Name
