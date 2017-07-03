@@ -11,21 +11,21 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: true,
       validate: {
-        isAlphanumeric: true
+        notEmpty: true
       }
     },
     author: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlpha: true
+        notEmpty: true
       }
     },
     genre: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlpha: true
+        notEmpty: true
       }
     },
     first_published: {

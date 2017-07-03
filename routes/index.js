@@ -123,7 +123,20 @@ router.put('/patrons/edit/:id', function(req, res, next) {
     res.redirect('/patrons');
   }).catch(function(error) {
     if(error.name === "SequelizeValidationError") {
-      res.render('new_patron', {errors: error})
+      db.patrons.findById(req.params.id, {
+        include: [
+          {
+            model: db.loans,
+            include: [
+              {
+                model: db.books
+              }
+            ]
+          }
+        ]
+      }).then(function(patron) {
+        res.render('patron_edit', {patron: patron, errors: error});
+      });
     } else {
       throw error
     };
@@ -159,7 +172,20 @@ router.put('/books/edit/:id', function (req, res, next) {
     })
     .catch(function(error) {
     if(error.name === "SequelizeValidationError") {
-      res.render('new_book', {errors: error})
+      db.books.findById(req.params.id, {
+        include: [
+          {
+            model: db.loans,
+            include: [
+              {
+                model: db.patrons
+              }
+            ]
+          }
+        ]
+      }).then(function(book){
+        res.render('book_edit', {book:book, errors: error});
+      });
     } else {
       throw error
     };
@@ -178,6 +204,13 @@ router.get('/loans/return/:id', function (req, res, next) {
   })
   .then(function (loan) {
     res.render(`return_book`, {date: currentDate, loan: loan, title: "Patron: Return Book"});
+  });
+});
+
+router.put('/loans/return/:id', function (req, res, next) {
+  db.loans.findById(req.params.id).then(function(loan) {
+    loan.update(req.body);
+    res.redirect('/loans');
   });
 });
 

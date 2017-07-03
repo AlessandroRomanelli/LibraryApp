@@ -16,9 +16,9 @@ html(lang='en')
     p
       strong Return By: #{space}
       = loan.return_by
-    form
+    form(action=`/loans/return/${loan.id}?_method=PUT`, method="POST")
       p
         label(for='returned_on') Returned on:
-        input#returned_on(type='date', value=date max=date)
+        input#returned_on(type='date', value=date max=date name="returned_on")
       p
         input(type='submit', value='Return Book')

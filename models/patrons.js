@@ -10,21 +10,21 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlpha: true
+        notEmpty: true
       }
     },
     last_name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlpha: true
+        notEmpty: true
       }
     },
     address: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlphanumeric: true
+        notEmpty: true
       }
     },
     email: {
@@ -38,7 +38,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlphanumeric: true
+        notEmpty: true
       }
     },
     zip_code: {
